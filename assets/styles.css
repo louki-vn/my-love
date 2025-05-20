@@ -1,7 +1,7 @@
 :root {
   --white-color: #fff;
   --black-color: #000;
-  --text-color: #333;
+  --text-color: #2f9cdb;
 
   --header-height: 124px;
   --width-btn: 340px;
@@ -17,7 +17,7 @@
 html {
   font-size: 62.5%;
   line-height: 1.6rem;
-  font-family: "Pacifico", cursive;
+  font-family: 'Pacifico', cursive;
   height: 100vh;
 }
 
@@ -43,21 +43,10 @@ canvas {
   overflow: hidden;
   flex-direction: column;
   flex: 1;
-  background-image: linear-gradient(to right top, #5998C5, #419D78);
-  animation: changeColor 4s ease-in-out;
-  -webkit-animation: changeColor 4s ease-in-out;
-  -moz-animation: changeColor 4s ease-in-out;
-  -o-animation: changeColor 4s ease-in-out;
-  animation-iteration-count: infinite;
-}
-
-@keyframes changeColor {
-  from {
-    background-image: linear-gradient(to left, #5998C5, #419D78);
-  }
-  to {
-    background-image: linear-gradient(to top, #5998C5, #419D78);
-  }
+  background-image: url('./image/z6508759092395_055fc65587e60a660d4312253a6247a3.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 /* Header */
@@ -69,16 +58,38 @@ canvas {
 .header-name {
   margin: 0;
   font-size: 4rem;
+  font-weight: bold;
   color: var(--text-color);
   padding: 20px 0;
   line-height: 50px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
 }
 
 .header-description {
   font-size: 2rem;
+  font-weight: 500;
   color: var(--text-color);
   padding: 10px 0;
-  font-weight: 400;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.message {
+  line-height: 2.5rem;
+  text-align: justify;
+  color: #6b0f1a;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+.heading-name {
+  font-size: 2.4rem;
+  font-weight: bolder;
+  color: var(--text-color);
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
+}
+
+.heading-msg {
+  font-size: 1.4rem;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);
 }
 
 /* Content */
@@ -111,7 +122,7 @@ canvas {
   height: 50px;
   border: none;
   border-radius: 12px;
-  background-color: #DDA448;
+  background-color: #dda448;
   font-size: 1.7rem;
   padding: 0 16px;
   color: var(--text-color);
@@ -133,7 +144,7 @@ canvas {
 }
 
 .btn--yes:hover {
-  background-color: #6B0F1A;
+  background-color: #6b0f1a;
   color: var(--white-color);
 }
 
@@ -147,12 +158,11 @@ canvas {
   text-align: center;
   align-items: center;
   background-color: rgba(204, 204, 204, 0.5);
-  /* overflow: hidden; */
   padding: 10px 0;
 }
 
 .footer-lisence {
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
   font-size: 1.3rem;
   font-weight: 300;
   color: var(--text-color);
@@ -169,7 +179,7 @@ canvas {
 }
 
 .footer-link:hover {
-  color: #5998C5;
+  color: #5998c5;
   cursor: url(https://cur.cursors-4u.net/symbols/sym-1/sym49.cur), auto !important;
 }
 
@@ -203,12 +213,12 @@ canvas {
 }
 
 .message-modal {
-  background-color: #419D78;
+  background-color: #af90a6;
   width: 540px;
   border-radius: 5px;
 }
 
-.heading-name {
+/* .heading-name {
   padding: 18px 0 8px 16px;
   font-size: 2.4rem;
   font-weight: bolder;
@@ -226,7 +236,7 @@ canvas {
   line-height: 2.5rem;
   text-align: justify;
   color: var(--text-color);
-}
+} */
 
 .footer-modal {
   display: flex;
@@ -265,8 +275,8 @@ canvas {
 
 .spinner {
   position: absolute;
-  left: 50%; /* centers the loading animation horizontally one the screen */
-  top: 50%; /* centers the loading animation vertically one the screen */
+  left: 50%;
+  top: 50%;
   width: 50px;
   height: 30px;
   text-align: center;
@@ -281,7 +291,7 @@ canvas {
 
 .dashed-loading:after,
 .dashed-loading:before {
-  content: "";
+  content: '';
   position: absolute;
   top: 0;
   left: 0;
@@ -290,21 +300,20 @@ canvas {
   height: 50px;
 }
 .dashed-loading:before {
-  /* z-index: 5; */
-  border: 3px dashed #5998C5;
+  border: 3px dashed #5998c5;
   border-left: 3px solid transparent;
   border-bottom: 3px solid transparent;
   -webkit-animation: dashed 1s linear infinite;
   animation: dashed 1s linear infinite;
 }
 .dashed-loading:after {
-  /* z-index: 10; */
-  border: 3px solid #5998C5;
+  border: 3px solid #5998c5;
   border-left: 3px solid transparent;
   border-bottom: 3px solid transparent;
   -webkit-animation: dashed 1s ease infinite;
   animation: dashed 1s ease infinite;
 }
+
 @keyframes dashed {
   to {
     transform: rotate(360deg);
