@@ -1,7 +1,7 @@
 :root {
   --white-color: #fff;
   --black-color: #000;
-  --text-color: #2f9cdb;
+  --text-color: #000000;
 
   --header-height: 124px;
   --width-btn: 340px;
@@ -216,6 +216,24 @@ canvas {
   background-color: #af90a6;
   width: 540px;
   border-radius: 5px;
+}
+
+/* Thêm vào styles.css hoặc thẻ <style> */
+
+/* Đảm bảo modal ban đầu bị ẩn */
+#answerModal {
+  display: none; /* Sẽ được thay đổi bởi JavaScript */
+}
+
+.modal__body textarea {
+  /* Style cho textarea nếu cần */
+  box-sizing: border-box; /* Đảm bảo padding và border không làm tăng kích thước tổng thể */
+  resize: vertical; /* Cho phép người dùng thay đổi chiều cao */
+}
+
+/* Style cho nút gửi nếu muốn khác biệt */
+#sendAnswerBtn {
+  /* Có thể thêm style riêng ở đây */
 }
 
 /* .heading-name {

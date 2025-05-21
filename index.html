@@ -8,6 +8,14 @@
     background-position: center;
     font-family: 'Poppins', sans-serif;
   }
+  /* Thêm CSS cho modal mới nếu cần, ví dụ: */
+  #answerModal {
+    display: none; /* Ban đầu ẩn */
+  }
+  .modal__body textarea {
+    box-sizing: border-box;
+    resize: vertical;
+  }
 </style>
 <!DOCTYPE html>
 <html lang="en">
@@ -62,19 +70,41 @@
         </div>
       </div>
 
-      <!-- Modal -->
-      <div class="modal">
-        <div class="modal__overlay"></div>
+      <!-- MODAL MỚI ĐỂ NHẬP CÂU TRẢ LỜI (THAY THẾ MODAL CŨ) -->
+      <div id="answerModal" class="modal">
+        <div class="modal__overlay" onclick="closeAnswerModal()"></div>
         <div class="modal__body">
-          <div class="message-modal">
+          <div class="message-modal" style="background-color: #87ceeb">
             <div class="heading-name">
-              <h2 class="name"></h2>
+              <h2 class="name">Gửi câu trả lời của em</h2>
             </div>
             <div class="heading-msg">
-              <p class="message"></p>
+              <textarea
+                id="answerInput"
+                placeholder="Nhập câu trả lời của bạn ở đây..."
+                style="
+                  width: 100%;
+                  min-height: 100px;
+                  padding: 10px;
+                  font-size: 1.6rem;
+                  border-radius: 5px;
+                  border: 1px solid #ccc;
+                "
+              ></textarea>
             </div>
             <div class="footer-modal">
-              <button class="btn btn-close">
+              <button
+                id="sendAnswerBtn"
+                class="btn"
+                style="
+                  background-color: #4caf50;
+                  color: white;
+                  margin-right: 10px;
+                "
+              >
+                Gửi
+              </button>
+              <button class="btn btn-close" onclick="closeAnswerModal()">
                 <i class="btn-icon ti-close"></i>
                 Đóng
               </button>
@@ -82,6 +112,7 @@
           </div>
         </div>
       </div>
+      <!-- KẾT THÚC MODAL MỚI -->
     </div>
 
     <script
@@ -97,24 +128,159 @@
 </html>
 
 <script>
-  const audio = document.getElementById('bg-music');
+  // Lấy các phần tử DOM
+  const yesButton = document.querySelector('.btn--yes');
+  const answerModal = document.getElementById('answerModal');
+  const answerInput = document.getElementById('answerInput');
+  const sendAnswerBtn = document.getElementById('sendAnswerBtn');
+  // Nút đóng đã có onclick="closeAnswerModal()"
 
-  // Khi người dùng click bất kỳ đâu trên trang, bật tiếng và phát lại
-  document.addEventListener('click', function () {
-    if (audio.paused) {
-      audio.play().then(() => {
-        audio.muted = false;
-      });
-    } else {
-      audio.muted = false;
+  // Hàm để hiển thị modal nhập câu trả lời
+  function openAnswerModal() {
+    if (answerModal) {
+      answerModal.style.display = 'flex';
     }
+  }
+
+  // Hàm để đóng modal nhập câu trả lời
+  function closeAnswerModal() {
+    if (answerModal) {
+      answerModal.style.display = 'none';
+      if (answerInput) answerInput.value = ''; // Xóa nội dung đã nhập
+    }
+  }
+
+  // Xử lý sự kiện khi nhấn nút "Đồng ý"
+  if (yesButton) {
+    // Giả sử CONFIG.js hoặc main.js sẽ đặt text cho nút .btn--yes
+    // Ví dụ: yesButton.textContent = "Gửi Tặng <3";
+    yesButton.addEventListener('click', function () {
+      openAnswerModal();
+    });
+  }
+
+  // Xử lý sự kiện khi nhấn nút "Gửi" trong modal
+  if (sendAnswerBtn) {
+    sendAnswerBtn.addEventListener('click', async function () {
+      const answerText = answerInput.value.trim();
+
+      if (answerText === '') {
+        alert('Vui lòng nhập câu trả lời của em!');
+        return;
+      }
+
+      const apiUrl = 'https://ctf86.free.beeceptor.com'; // << THAY THẾ BẰNG URL API CỦA BẠN
+
+      // Hiển thị trạng thái đang gửi (tùy chọn)
+      sendAnswerBtn.textContent = 'Đang gửi...';
+      sendAnswerBtn.disabled = true;
+
+      try {
+        const response = await fetch(apiUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            answer: answerText,
+            // guestName: 'Tên khách' // Bạn có thể lấy tên khách từ một input khác nếu muốn
+          }),
+        });
+
+        if (response.ok) {
+          const result = await response.json();
+          console.log('API response:', result);
+          alert('Câu trả lời của bạn đã được gửi thành công!');
+          closeAnswerModal();
+        } else {
+          const errorData = await response.text();
+          console.error('API Error:', response.status, errorData);
+          alert(
+            `Lỗi khi gửi câu trả lời: ${response.status} - ${
+              errorData || 'Vui lòng thử lại.'
+            }`
+          );
+        }
+      } catch (error) {
+        console.error('Fetch Error:', error);
+      } finally {
+        // Khôi phục lại trạng thái nút gửi
+        sendAnswerBtn.textContent = 'Gửi';
+        sendAnswerBtn.disabled = false;
+      }
+    });
+  }
+
+  // Xử lý nhạc nền
+  const siteAudio = document.getElementById('bg-music');
+  function handleFirstUserInteractionForAudio() {
+    if (siteAudio) {
+      if (siteAudio.paused) {
+        // Nếu đang dừng thì mới play và unmute
+        siteAudio
+          .play()
+          .then(() => {
+            siteAudio.muted = false;
+          })
+          .catch((e) =>
+            console.log('Autoplay with sound failed after interaction:', e)
+          );
+      } else {
+        // Nếu đang chạy rồi (ví dụ do autoplay muted) thì chỉ cần unmute
+        siteAudio.muted = false;
+      }
+    }
+  }
+  // Chạy một lần duy nhất khi người dùng tương tác lần đầu
+  document.addEventListener('click', handleFirstUserInteractionForAudio, {
+    once: true,
   });
 </script>
 
-<!-- <script>
-  // Đoạn mã này sẽ tự động phát nhạc nền khi trang được tải
-  document.addEventListener('DOMContentLoaded', function () {
-    const audio = document.querySelector('.music');
-    audio.play();
-  });
-</script> -->
+<script>
+  // ... (Mã JavaScript hiện có của bạn cho modal, nhạc, v.v.) ...
+
+  const noButton = document.querySelector('.btn--no');
+  const answerQuestionDiv = document.querySelector('.answer-question'); // Phần tử chứa 2 nút
+
+  if (noButton && answerQuestionDiv) {
+    // Đặt nội dung cho nút "Không" nếu nó chưa có
+    // Bạn có thể đặt nội dung này trong CONFIG.js hoặc main.js nếu muốn
+    if (!noButton.textContent.trim()) {
+      noButton.textContent = 'Không nhé :P';
+    }
+
+    noButton.addEventListener('mouseover', function () {
+      // Lấy kích thước của khu vực chứa nút
+      const containerRect = answerQuestionDiv.getBoundingClientRect();
+      // Lấy kích thước của chính nút "Không"
+      const buttonRect = noButton.getBoundingClientRect();
+
+      // Tính toán vị trí ngẫu nhiên mới, đảm bảo nút không đi ra ngoài container
+      // Trừ đi kích thước nút để nó không bị một phần ra ngoài
+      let newTop = Math.random() * (containerRect.height - buttonRect.height);
+      let newLeft = Math.random() * (containerRect.width - buttonRect.width);
+
+      // Giới hạn vị trí để không quá gần các cạnh (tùy chọn)
+      newTop = Math.max(
+        0,
+        Math.min(newTop, containerRect.height - buttonRect.height)
+      );
+      newLeft = Math.max(
+        0,
+        Math.min(newLeft, containerRect.width - buttonRect.width)
+      );
+
+      noButton.style.position = 'absolute'; // Đảm bảo nút được định vị tuyệt đối
+      noButton.style.top = newTop + 'px';
+      noButton.style.left = newLeft + 'px';
+    });
+
+    // (Tùy chọn) Thêm sự kiện click cho nút "Không" nếu bạn muốn nó làm gì đó
+    noButton.addEventListener('click', function () {
+      alert('Sao lại không? Nghĩ kỹ lại đi nè! ^^');
+      // Hoặc bạn có thể làm cho nó di chuyển một lần nữa
+      // Hoặc thay đổi một thông điệp nào đó trên trang
+    });
+  }
+</script>
